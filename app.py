@@ -11,8 +11,8 @@ from helper_funcs import calculate_angle
 
 
 
-with open('repcounter.p', 'rb') as f:
-    model = pickle.load(f)
+with open('repcounter.p', 'rb') as file:
+    model = pickle.load(file)
 
 
 # NOREP APP - MEDIAPIPE STREAM
