@@ -90,10 +90,10 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                 posturebox = cv2.rectangle(image, (0,150), (225,73), (200,200,16), -1)
             if (r_grip>120)|(l_grip>120):
                 grip = 'Grip: Too wide'
-                posturebox = cv2.rectangle(image, (0,150), (225,73), (56,38,163), -1)
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
             if (r_grip<90)|(l_grip<90):
                 grip = 'Grip: Too narrow'
-                posturebox = cv2.rectangle(image, (0,150), (225,73), (56,38,163), -1)
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
 
             # Stance logic
             if (r_stance>88)|(l_stance>88)&(r_stance<98)|(l_stance<98):
@@ -128,7 +128,8 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         
         # Setup status box
         cv2.rectangle(image, (0,0), (225,73), (87,122,59), -1)
-        posturebox
+        postureboxlogic = posturebox
+        postureboxlogic
         
         # Rep data
         cv2.putText(image, 'REPS', (25,15), 
