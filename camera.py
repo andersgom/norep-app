@@ -42,7 +42,6 @@ class Camera:
                 ret, frame = self.camera.read()
 
                 if(ret == True):
-                    print(frame.shape)
                     image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                     image.flags.writeable = False
                     # Make detection
