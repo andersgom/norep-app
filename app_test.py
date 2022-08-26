@@ -34,9 +34,9 @@ def gen():
 
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         result = pose.process(image)
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         #landmarks = result.pose_landmarks.landmark
 
-        
         # print(result.pose_landmarks)
         if result.pose_landmarks:
             mp_drawing.draw_landmarks(frame, result.pose_landmarks, mp_pose.POSE_CONNECTIONS,
@@ -131,10 +131,13 @@ def gen():
             cv2.putText(image, f'CONF:{str(round(body_language_prob[np.argmax(body_language_prob)],2))}', (130,68), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
         
         # Render detections
+        mp_drawing.draw_landmarks(image, result.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(0,30,0), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(187,225,160), thickness=2, circle_radius=2)  
+                                    )
 
-
-        #cv2.imshow("Pose detection", img)
-        frame = cv2.imencode('.jpg', frame)[1].tobytes()
+        #cv2.imshow("Pose detection", image)
+        frame = cv2.imencode('.jpg', image)[1].tobytes()
         yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         key = cv2.waitKey(20)
         if key == 27:

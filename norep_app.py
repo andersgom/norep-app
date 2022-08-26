@@ -1,40 +1,156 @@
-from flask import Flask, render_template, Response, request, url_for
 import cv2
-import pandas as pd
+from flask import Flask, render_template, Response
 import mediapipe as mp
-import logging
-mp_drawing = mp.solutions.drawing_utils
-mp_pose = mp.solutions.pose
 from helper_funcs import *
-from camera import Camera
-camera = Camera(fps=60)
-
-logger = logging.getLogger(__name__)
+import numpy as np
 
 app = Flask(__name__)
-
-camera = Camera(fps=60)
-camera.run()
-
-
+with open('repcounter.p', 'rb') as file:
+    model = pickle.load(file)
 
 @app.route('/')
 def index():
+    """Video streaming home page."""
     return render_template('index.html')
 
+def gen():
+    counter = 0 
+    grip = None
+    stance = None
+    stage = None
+    # creating our model to draw landmarks
+    mp_drawing = mp.solutions.drawing_utils
+    # creating our model to detected our pose
+    mp_pose = mp.solutions.pose
+    pose = mp_pose.Pose()
+
+    """Video streaming generator function."""
+    cap = cv2.VideoCapture(0)
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        # converting image to RGB from BGR cuz mediapipe only work on RGB
+        
+
+        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        result = pose.process(image)
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        #landmarks = result.pose_landmarks.landmark
+
+        # print(result.pose_landmarks)
+        if result.pose_landmarks:
+            mp_drawing.draw_landmarks(frame, result.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(0,30,0), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(187,225,160), thickness=2, circle_radius=2)  
+                                    )
+
+            # Grip
+            l_shoulder = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
+            r_shoulder = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
+            l_elbow = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
+            r_elbow = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]
+            # Stance
+            l_hip = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP.value].y]
+            r_hip = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP.value].y]
+            l_ankle = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value].y]
+            r_ankle = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ANKLE.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ANKLE.value].y]
+            
+            
+            # Calculate angles
+            l_grip = calculate_angle(r_shoulder, l_shoulder, l_elbow)
+            r_grip = calculate_angle(l_shoulder, r_shoulder, r_elbow)
+            l_stance = calculate_angle(r_hip, l_hip, l_ankle)
+            r_stance = calculate_angle(l_hip, r_hip, r_ankle)
 
 
-def gen(camera):
-    logger.debug("Starting stream")
-    while True:
-        frame = camera.get_frame()
-        yield (b"--frame\r\n" b"Content-Type: image/png\r\n\r\n" + frame + b"\r\n")
+            # Grip logic
+            if (r_grip>90)|(l_grip>90)&(r_grip<120)|(l_grip<120):
+                grip = 'Grip: Good!'
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (200,200,16), -1)
+            if (r_grip>120)|(l_grip>120):
+                grip = 'Grip: Too wide'
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
+            if (r_grip<90)|(l_grip<90):
+                grip = 'Grip: Too narrow'
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
+
+            # Stance logic
+            if (r_stance>88)|(l_stance>88)&(r_stance<98)|(l_stance<98):
+                stance = 'Stance: Good!'
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (200,200,16), -1)
+            if (r_stance>98)|(l_stance>98):
+                stance = 'Stance: Too wide'
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
+            if (r_stance<88)|(l_stance<88):
+                stance = 'Stance: Too narrow'
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
 
 
-@app.route("/video_feed")
+            # Model implementation
+            poses = result.pose_landmarks.landmark
+            pose_row = np.array([[landmark.x, landmark.y, landmark.z] for landmark in poses]).flatten()
+            frame_height, frame_width = frame.shape[:2]
+            pose_row = pose_row * np.array([frame_width, frame_height, frame_width])[:,None]
+            X = pd.DataFrame([pose_row[0]])
+            body_language_class = model.predict(X)[0]
+            body_language_prob = model.predict_proba(X)[0]
+
+            # Rep counter logic
+            if body_language_class == 0:
+                stage = 'Down'
+            if (body_language_class == 1)&(stage=='Down'):
+                stage = 'Up'
+                counter +=1
+
+
+            cv2.rectangle(image, (0,0), (225,73), (87,122,59), -1)
+            postureboxlogic = posturebox
+            postureboxlogic
+            
+            # Rep data
+            cv2.putText(image, 'REPS', (25,15), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
+            cv2.putText(image, str(counter), 
+                        (30,60), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255,255,255), 2, cv2.LINE_AA)
+            
+            # Posture data
+            cv2.putText(image, 'POSTURE', (70,90), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
+            cv2.putText(image, grip, (15,115), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(image, stance, (15,140), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1, cv2.LINE_AA)
+            
+            # Stage data
+
+            cv2.putText(image, 'STAGE', (145,15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(image, stage, (130,45), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+            
+            # Display Probability
+            cv2.putText(image, f'CONF:{str(round(body_language_prob[np.argmax(body_language_prob)],2))}', (130,68), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+        
+        # Render detections
+        mp_drawing.draw_landmarks(image, result.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(0,30,0), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(187,225,160), thickness=2, circle_radius=2)  
+                                    )
+
+        #cv2.imshow("Pose detection", image)
+        frame = cv2.imencode('.jpg', image)[1].tobytes()
+        yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        key = cv2.waitKey(20)
+        if key == 27:
+            break
+
+
+@app.route('/video_feed')
 def video_feed():
-    return Response(gen(camera), mimetype="multipart/x-mixed-replace; boundary=frame")
+    """Video streaming route. Put this in the src attribute of an img tag."""
+    return Response(gen(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-if __name__ == "__main__":
-    app.run(debug=False, port=3430)
+
+if __name__=="__main__":
+    app.run(debug=False)
