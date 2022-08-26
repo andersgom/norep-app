@@ -29,39 +29,31 @@ def gen():
 
     while cap.isOpened():
         ret, frame = cap.read()
-        # converting image to RGB from BGR cuz mediapipe only work on RGB
-        
+
+        # Image processing
 
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         result = pose.process(image)
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        #landmarks = result.pose_landmarks.landmark
 
-        # print(result.pose_landmarks)
         if result.pose_landmarks:
-            mp_drawing.draw_landmarks(frame, result.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                    mp_drawing.DrawingSpec(color=(0,30,0), thickness=2, circle_radius=2), 
-                                    mp_drawing.DrawingSpec(color=(187,225,160), thickness=2, circle_radius=2)  
-                                    )
 
-            # Grip
+            # Grip variables
             l_shoulder = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
             r_shoulder = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER.value].y]
             l_elbow = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
             r_elbow = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]
-            # Stance
+            # Stance variables
             l_hip = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP.value].y]
             r_hip = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_HIP.value].y]
             l_ankle = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value].y]
             r_ankle = [result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ANKLE.value].x,result.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ANKLE.value].y]
-            
             
             # Calculate angles
             l_grip = calculate_angle(r_shoulder, l_shoulder, l_elbow)
             r_grip = calculate_angle(l_shoulder, r_shoulder, r_elbow)
             l_stance = calculate_angle(r_hip, l_hip, l_ankle)
             r_stance = calculate_angle(l_hip, r_hip, r_ankle)
-
 
             # Grip logic
             if (r_grip>90)|(l_grip>90)&(r_grip<120)|(l_grip<120):
@@ -85,7 +77,6 @@ def gen():
                 stance = 'Stance: Too narrow'
                 posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
 
-
             # Model implementation
             poses = result.pose_landmarks.landmark
             pose_row = np.array([[landmark.x, landmark.y, landmark.z] for landmark in poses]).flatten()
@@ -102,6 +93,8 @@ def gen():
                 stage = 'Up'
                 counter +=1
 
+            
+            # Stream Display
 
             cv2.rectangle(image, (0,0), (225,73), (87,122,59), -1)
             postureboxlogic = posturebox
@@ -123,7 +116,6 @@ def gen():
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1, cv2.LINE_AA)
             
             # Stage data
-
             cv2.putText(image, 'STAGE', (145,15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(image, stage, (130,45), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
             
@@ -136,7 +128,6 @@ def gen():
                                     mp_drawing.DrawingSpec(color=(187,225,160), thickness=2, circle_radius=2)  
                                     )
 
-        #cv2.imshow("Pose detection", image)
         frame = cv2.imencode('.jpg', image)[1].tobytes()
         yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         key = cv2.waitKey(20)
