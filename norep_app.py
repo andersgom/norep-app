@@ -3,6 +3,9 @@ from flask import Flask, render_template, Response
 import mediapipe as mp
 from helper_funcs import *
 import numpy as np
+import warnings
+
+warnings.filterwarnings(action="ignore", category=UserWarning)
 
 app = Flask(__name__)
 with open('repcounter.p', 'rb') as file:
