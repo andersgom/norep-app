@@ -4,28 +4,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NoRep App</title>
-    <style>
-        .container{
-            margin: 20px;
-            padding: 0;
-            width: 98%;
-            height: 93%;
-            background-color: #c0c8e7;
-            color: rgb(0, 14, 1);
-            text-align: center;
-        }
+    <link rel="stylesheet" href="..\static\css\style.css">
 
-    </style>
 </head>
 <body class = "container">
     <div class="row">
-        <div class="column">
+        <div class="column_left">
             <h1>NoRep App</h1>
+            <p>Deep-Learning-powered app that helps you improve your weightlifting performance.</p>
         </div>
-        <div class="column">
+        <div class="column_center">
             <img src="{{ url_for('video_feed') }}">
+            <p>Text box, no idea what I'm writing here.</p>
         </div>
-        <div class="column"></div>
+        <div class="column_right">
+            <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Probably gifs in here.</h1>
+        </div>
       </div>
 </body>
 </html>

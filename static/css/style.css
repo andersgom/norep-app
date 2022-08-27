@@ -1,0 +1,39 @@
+:root{
+    --samecolor: rgb(155, 180, 184)
+}
+
+.container{
+    padding: 0;
+    width: 99%;
+    height: 95%;
+    background-color: var(--samecolor);
+    color: rgb(0, 14, 1);
+    text-align: center;
+}
+
+.column_left, .column_right, .column_center {
+    float:left;
+    background-color: #cbcdcb;
+  }
+  
+  .column_left {
+    width: 25%;
+    height: 100%;
+    align-self:flex-start;
+    background-color: #cbcdcb;
+  }
+
+  .column_center {
+    width: 50%;
+    margin-bottom: 5%;
+    align-self: center;
+    background-color: var(--samecolor);
+  }
+
+  .column_right {
+    width: 25%;
+    height: 100%;
+    align-self: flex-end;
+    background-color: #009500;
+  }
+  
