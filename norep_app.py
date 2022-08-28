@@ -61,24 +61,24 @@ def gen():
             # Grip logic
             if (r_grip>90)|(l_grip>90)&(r_grip<120)|(l_grip<120):
                 grip = 'Grip: Good!'
-                posturebox = cv2.rectangle(image, (0,150), (225,73), (200,200,16), -1)
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (160,170,80), -1)
             if (r_grip>120)|(l_grip>120):
                 grip = 'Grip: Too wide'
-                posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (80,160,170), -1)
             if (r_grip<90)|(l_grip<90):
                 grip = 'Grip: Too narrow'
-                posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (80,160,170), -1)
 
             # Stance logic
             if (r_stance>88)|(l_stance>88)&(r_stance<98)|(l_stance<98):
                 stance = 'Stance: Good!'
-                posturebox = cv2.rectangle(image, (0,150), (225,73), (200,200,16), -1)
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (160,170,80), -1)
             if (r_stance>98)|(l_stance>98):
                 stance = 'Stance: Too wide'
-                posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (80,160,170), -1)
             if (r_stance<88)|(l_stance<88):
                 stance = 'Stance: Too narrow'
-                posturebox = cv2.rectangle(image, (0,150), (225,73), (0,145,218), -1)
+                posturebox = cv2.rectangle(image, (0,150), (225,73), (80,160,170), -1)
 
             # Model implementation
             poses = result.pose_landmarks.landmark
@@ -99,7 +99,7 @@ def gen():
             
             # Stream Display
 
-            cv2.rectangle(image, (0,0), (225,73), (87,122,59), -1)
+            cv2.rectangle(image, (0,0), (225,73), (22,111,83), -1)
             postureboxlogic = posturebox
             postureboxlogic
             
@@ -127,8 +127,8 @@ def gen():
         
         # Render detections
         mp_drawing.draw_landmarks(image, result.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                    mp_drawing.DrawingSpec(color=(0,30,0), thickness=2, circle_radius=2), 
-                                    mp_drawing.DrawingSpec(color=(187,225,160), thickness=2, circle_radius=2)  
+                                    mp_drawing.DrawingSpec(color=(0,53,29), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(140,180,140), thickness=2, circle_radius=2)  
                                     )
 
         frame = cv2.imencode('.jpg', image)[1].tobytes()

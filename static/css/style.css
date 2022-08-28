@@ -1,5 +1,5 @@
 :root{
-    --samecolor: rgb(155, 180, 184)
+    --samecolor: #cbcdcb
 }
 
 .container{
@@ -7,8 +7,19 @@
     width: 99%;
     height: 95%;
     background-color: var(--samecolor);
-    color: rgb(0, 14, 1);
+    color: rgb(1, 11, 2);
     text-align: center;
+}
+
+.app-title{
+  font-family: 'Allerta Stencil';
+  font-size: 35px;
+  color: #fff
+}
+
+.slogan{
+  font-family: 'Gruppo';
+  font-size: 20px;
 }
 
 .column_left, .column_right, .column_center {
@@ -17,10 +28,12 @@
   }
   
   .column_left {
-    width: 25%;
+    padding: 0.4%;
+    width: 24%;
     height: 100%;
     align-self:flex-start;
-    background-color: #cbcdcb;
+    background-color: #4c5355;
+    color:rgb(213, 213, 213)
   }
 
   .column_center {
@@ -31,9 +44,11 @@
   }
 
   .column_right {
-    width: 25%;
+    padding: 0.4%;
+    width: 24%;
     height: 100%;
     align-self: flex-end;
-    background-color: #009500;
+    background-color: #536f16;
+    font-family:'Gruppo';
   }
   
