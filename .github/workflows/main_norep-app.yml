@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'NoRep-app'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B220B77DCF6248138B0A7A7A24EF0F3A }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0C8B13F495BF4C148A97BDCE112C7780 }}
