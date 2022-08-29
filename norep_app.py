@@ -107,7 +107,7 @@ def gen():
             cv2.putText(image, 'REPS', (25,15), 
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
             cv2.putText(image, str(counter), 
-                        (30,60), 
+                        (30,55), 
                         cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255,255,255), 2, cv2.LINE_AA)
             
             # Posture data

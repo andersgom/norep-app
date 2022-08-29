@@ -22,6 +22,22 @@
   font-size: 20px;
 }
 
+.btn {
+  cursor: pointer;
+  border: 1.5px solid #112604;
+  font-family: 'Gruppo';
+  background-color: transparent;
+  height: 50px;
+  width: 200px;
+  color: #e3e3e3;
+  font-size: 1.5em;
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.6);
+}
+
+.btn:hover {
+  background-color: #AAA050;
+}
+
 .column_left, .column_right, .column_center {
     float:left;
     background-color: #cbcdcb;
@@ -49,6 +65,6 @@
     height: 100%;
     align-self: flex-end;
     background-color: #536f16;
-    font-family:'Gruppo';
+    font-family: monospace;
   }
   
