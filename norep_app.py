@@ -8,8 +8,11 @@ import warnings
 warnings.filterwarnings(action="ignore", category=UserWarning)
 
 app = Flask(__name__)
+# Models
 with open('repcounter.p', 'rb') as file:
     model = pickle.load(file)
+with open('repcountsquat.p', 'rb') as file:
+    model2 = pickle.load(file)
 
 @app.route('/')
 def index():
@@ -138,12 +141,94 @@ def gen():
             break
 
 
-@app.route('/video_feed')
-def video_feed():
+def gen2():
+    counter = 0 
+    stage = None
+    # creating our model to draw landmarks
+    mp_drawing = mp.solutions.drawing_utils
+    # creating our model to detected our pose
+    mp_pose = mp.solutions.pose
+    pose = mp_pose.Pose()
+
+    """Video streaming generator function."""
+    cap = cv2.VideoCapture(0)
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+
+        # Image processing
+
+        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        result = pose.process(image)
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+        if result.pose_landmarks:
+
+            # Model implementation
+            poses = result.pose_landmarks.landmark
+            pose_row = np.array([[landmark.x, landmark.y, landmark.z] for landmark in poses]).flatten()
+            frame_height, frame_width = frame.shape[:2]
+            pose_row = pose_row * np.array([frame_width, frame_height, frame_width])[:,None]
+            X = pd.DataFrame([pose_row[0]])
+            body_language_class = model2.predict(X)[0]
+            body_language_prob = model2.predict_proba(X)[0]
+
+            # Rep counter logic
+            if body_language_class == 0:
+                stage = 'Down'
+            if (body_language_class == 1)&(stage=='Down'):
+                stage = 'Up'
+                counter +=1
+
+            
+            # Stream Display
+
+            cv2.rectangle(image, (0,0), (225,73), (22,111,83), -1)
+            
+            # Rep data
+            cv2.putText(image, 'REPS', (25,15), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
+            cv2.putText(image, str(counter), 
+                        (30,55), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255,255,255), 2, cv2.LINE_AA)
+            
+            # Stage data
+            cv2.putText(image, 'STAGE', (145,15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(image, stage, (130,45), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+            
+            # Display Probability
+            cv2.putText(image, f'CONF:{str(round(body_language_prob[np.argmax(body_language_prob)],2))}', (130,68), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+        
+        # Render detections
+        mp_drawing.draw_landmarks(image, result.pose_landmarks, mp_pose.POSE_CONNECTIONS,
+                                    mp_drawing.DrawingSpec(color=(0,53,29), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(140,180,140), thickness=2, circle_radius=2)  
+                                    )
+
+        frame = cv2.imencode('.jpg', image)[1].tobytes()
+        yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        key = cv2.waitKey(20)
+        if key == 27:
+            break
+
+
+
+@app.route('/deadlift_feed')
+def deadlift_feed():
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(gen(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/squat_feed')
+def squat_feed():
+    """Video streaming route. Put this in the src attribute of an img tag."""
+    return Response(gen2(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/sq')
+def indexsq():
+    """Video streaming home page."""
+    return render_template('index_sq.html')
 
 
 if __name__=="__main__":

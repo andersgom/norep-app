@@ -11,14 +11,16 @@ from sklearn.neighbors import KNeighborsClassifier
 data = pd.read_csv('fitness_poses_csvs_out_basic.csv', header=None)
 
 # Prepare data
-
+# Define the classes
+class0 = 'squat_down'
+class1 = 'squat_up'
 data.columns = [str(col) for col in data.columns]
 data.drop(['0'], axis=1)
 
 def newtarget(row):
-    if row['1'] == 'deadlift_down':
+    if row['1'] == class0:
         return 0
-    elif row['1'] == 'deadlift_up':
+    elif row['1'] == class1:
         return 1
 
 data['1'] = data.apply(newtarget, axis=1)
@@ -36,10 +38,10 @@ knn.fit(X_train, y_train)
 
 
 ## Score -- DEBUGGING PURPOSES
-#print("Test data accuracy was", knn.score(X_test, y_test))
-#print("Train data accuracy was", knn.score(X_train, y_train))
+print("Test data accuracy was", knn.score(X_test, y_test))
+print("Train data accuracy was", knn.score(X_train, y_train))
 
 #Save the model
-pkl_file = 'repcounter.p'
+pkl_file = 'repcountsquat.p'
 with open(pkl_file, 'wb') as file:
     pickle.dump(knn, file)

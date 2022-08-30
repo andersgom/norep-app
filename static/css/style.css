@@ -1,70 +1,84 @@
 :root{
-    --samecolor: #cbcdcb
+    --samecolor: #000
 }
 
 .container{
     padding: 0;
     width: 99%;
     height: 95%;
-    background-color: var(--samecolor);
     color: rgb(1, 11, 2);
     text-align: center;
+    background-image: url("/static/images/pexels-victor-freitas-2261477-2.jpg");
+    background-color: var(--samecolor);
 }
 
 .app-title{
   font-family: 'Allerta Stencil';
-  font-size: 35px;
+  font-size: 25px;
   color: #fff
 }
 
-.slogan{
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
   font-family: 'Gruppo';
-  font-size: 20px;
+  color:rgb(71, 71, 71);
+  background: rgba( 255, 255, 255, 0.2);
+  backdrop-filter: blur( 10.5px );
+  -webkit-backdrop-filter: blur( 10.5px );
+  border-radius: 5px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+li {
+  float: left;
+}
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 15px 16px;
+  text-decoration: none;
+}
+.buttons {
+  display: block;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  padding: 23px 16px;
+  text-decoration: none;
+}
+/* Change the link color to #111 (black) on hover */
+.buttons:hover {
+  background-color: rgb(40, 0, 0);
 }
 
-.btn {
-  cursor: pointer;
-  border: 1.5px solid #112604;
-  font-family: 'Gruppo';
-  background-color: transparent;
-  height: 50px;
-  width: 200px;
-  color: #e3e3e3;
-  font-size: 1.5em;
-  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.6);
-}
-
-.btn:hover {
-  background-color: #AAA050;
-}
-
-.column_left, .column_right, .column_center {
+.column_right, .column_center {
     float:left;
     background-color: #cbcdcb;
   }
-  
-  .column_left {
-    padding: 0.4%;
-    width: 24%;
-    height: 100%;
-    align-self:flex-start;
-    background-color: #4c5355;
-    color:rgb(213, 213, 213)
-  }
 
   .column_center {
-    width: 50%;
-    margin-bottom: 5%;
+    width: 74%;
+    padding: 2.5%;
     align-self: center;
-    background-color: var(--samecolor);
+    background: rgba(0, 0, 0, 0);
   }
 
   .column_right {
     padding: 0.4%;
-    width: 24%;
-    height: 100%;
+    width: 20%;
+    height: 88%;
     align-self: flex-end;
-    background-color: #536f16;
-    font-family: monospace;
+    font-family: 'Gruppo';
+    color:rgb(255, 255, 255);
+    background: rgba( 255, 255, 255, 0.2);
+    box-shadow: 0 3px 10px 0 rgba(99, 99, 99, 0.37);
+    backdrop-filter: blur( 10.5px );
+    -webkit-backdrop-filter: blur( 10.5px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
   }
   
