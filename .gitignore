@@ -2,4 +2,8 @@ __pycache__
 fitness_poses_images_in
 fitness_poses_images_out_basic
 fitness_poses_csvs_out_basic.csv
+fitness_poses_csvs_out_deadlift.csv
 norepvenv
+classmodel.ipynb
+Pose_classification_(basic).ipynb
+testing-notebook.ipynb
