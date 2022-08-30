@@ -24,6 +24,8 @@ def gen():
     grip = None
     stance = None
     stage = None
+    grip_acc = []
+    stance_acc = []
     # creating our model to draw landmarks
     mp_drawing = mp.solutions.drawing_utils
     # creating our model to detected our pose
@@ -71,6 +73,12 @@ def gen():
             if (r_grip<90)|(l_grip<90):
                 grip = 'Grip: Too narrow'
                 posturebox = cv2.rectangle(image, (0,150), (225,73), (80,160,170), -1)
+            
+            # Grip accuracy logic
+            if grip == 'Grip: Good!':
+                grip_acc.append(1)
+            if (grip == 'Grip: Too wide')|(grip == 'Grip: Too narrow'):
+                grip_acc.append(0)
 
             # Stance logic
             if (r_stance>88)|(l_stance>88)&(r_stance<98)|(l_stance<98):
@@ -82,6 +90,13 @@ def gen():
             if (r_stance<88)|(l_stance<88):
                 stance = 'Stance: Too narrow'
                 posturebox = cv2.rectangle(image, (0,150), (225,73), (80,160,170), -1)
+            
+            # Stance accuracy logic
+
+            if grip == 'Stance: Good!':
+                grip_acc.append(1)
+            if (grip == 'Stance: Too wide')|(grip == 'Stance: Too narrow'):
+                grip_acc.append(0)
 
             # Model implementation
             poses = result.pose_landmarks.landmark
