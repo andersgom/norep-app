@@ -1,10 +1,4 @@
 import numpy as np
-import pandas as pd
-import pickle
-import mediapipe as mp
-import cv2
-mp_drawing = mp.solutions.drawing_utils
-mp_pose = mp.solutions.pose
 
 def calculate_angle(a,b,c):
     a = np.array(a) # First
@@ -18,4 +12,3 @@ def calculate_angle(a,b,c):
         angle = 360-angle
         
     return angle
-

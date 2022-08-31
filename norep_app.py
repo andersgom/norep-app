@@ -3,23 +3,31 @@ from flask import Flask, render_template, Response
 import mediapipe as mp
 from helper_funcs import *
 import numpy as np
+import pandas as pd
+import pickle
 import warnings
+
 
 warnings.filterwarnings(action="ignore", category=UserWarning)
 
 app = Flask(__name__)
+
+stance_acc = []
+grip_acc = []
+counter_df = 0
+counter_as = 0
+
 # Models
 with open('repcounter.p', 'rb') as file:
     model = pickle.load(file)
 with open('repcountsquat.p', 'rb') as file:
     model2 = pickle.load(file)
 
-@app.route('/')
-def index():
-    """Video streaming home page."""
-    return render_template('index.html')
 
 def gen():
+    global stance_acc
+    global grip_acc
+    global counter_df
     counter = 0 
     grip = None
     stance = None
@@ -93,10 +101,10 @@ def gen():
             
             # Stance accuracy logic
 
-            if grip == 'Stance: Good!':
-                grip_acc.append(1)
-            if (grip == 'Stance: Too wide')|(grip == 'Stance: Too narrow'):
-                grip_acc.append(0)
+            if stance == 'Stance: Good!':
+                stance_acc.append(1)
+            if (stance == 'Stance: Too wide')|(stance == 'Stance: Too narrow'):
+                stance_acc.append(0)
 
             # Model implementation
             poses = result.pose_landmarks.landmark
@@ -114,10 +122,11 @@ def gen():
                 stage = 'Up'
                 counter +=1
 
-            
+            counter_df = counter
+
             # Stream Display
 
-            cv2.rectangle(image, (0,0), (225,73), (22,111,83), -1)
+            cv2.rectangle(image, (0,0), (225,73), (25,80,25), -1)
             postureboxlogic = posturebox
             postureboxlogic
             
@@ -145,7 +154,7 @@ def gen():
         
         # Render detections
         mp_drawing.draw_landmarks(image, result.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                    mp_drawing.DrawingSpec(color=(0,53,29), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(0,40,0), thickness=2, circle_radius=2), 
                                     mp_drawing.DrawingSpec(color=(140,180,140), thickness=2, circle_radius=2)  
                                     )
 
@@ -154,9 +163,12 @@ def gen():
         key = cv2.waitKey(20)
         if key == 27:
             break
+        
+    return stance_acc, grip_acc, counter_df
 
 
 def gen2():
+    global counter_as
     counter = 0 
     stage = None
     # creating our model to draw landmarks
@@ -195,10 +207,11 @@ def gen2():
                 stage = 'Up'
                 counter +=1
 
+            counter_as = counter
             
             # Stream Display
 
-            cv2.rectangle(image, (0,0), (225,73), (22,111,83), -1)
+            cv2.rectangle(image, (0,0), (225,73), (25,80,25), -1)
             
             # Rep data
             cv2.putText(image, 'REPS', (25,15), 
@@ -216,7 +229,7 @@ def gen2():
         
         # Render detections
         mp_drawing.draw_landmarks(image, result.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                    mp_drawing.DrawingSpec(color=(0,53,29), thickness=2, circle_radius=2), 
+                                    mp_drawing.DrawingSpec(color=(0,40,0), thickness=2, circle_radius=2), 
                                     mp_drawing.DrawingSpec(color=(140,180,140), thickness=2, circle_radius=2)  
                                     )
 
@@ -225,8 +238,14 @@ def gen2():
         key = cv2.waitKey(20)
         if key == 27:
             break
+    
+    return counter_as
 
 
+@app.route('/')
+def index():
+    """Video streaming home page."""
+    return render_template('index.html')
 
 @app.route('/deadlift_feed')
 def deadlift_feed():
@@ -234,17 +253,21 @@ def deadlift_feed():
     return Response(gen(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
+@app.route('/sq')
+def indexsq():
+    """Video streaming squat page."""
+    return render_template('index_sq.html')
+
 @app.route('/squat_feed')
 def squat_feed():
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(gen2(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/sq')
-def indexsq():
-    """Video streaming home page."""
-    return render_template('index_sq.html')
-
+@app.route('/metrics')
+def metrics():
+    return render_template('index_metrics.html', countdf = counter_df, countas = counter_as, grip = round(np.mean(grip_acc),1)*100, stance = round(np.mean(stance_acc),1)*100)
 
 if __name__=="__main__":
     app.run(debug=True)

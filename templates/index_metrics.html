@@ -14,18 +14,34 @@
         <div class="nav_bar">
             <ul>
                 <li><a class="app-title">NoRep</a></li>
-                <li><a class="buttons" href="{{url_for('metrics')}}">Metrics</a></li>
+                <li><a class="buttons" href="##">Metrics</a></li>
                 <li style="float:right"><a class="buttons" target="_blank" href="https://www.linkedin.com/in/andres-sanchez-gomez/">LinkedIn</a></li>
                 <li style="float:right"><a class="buttons" target="_blank" href="https://github.com/andersgom">GitHub</a></li>
               </ul> 
         </div>
         <div class="column_center">
-            <img src="{{ url_for('deadlift_feed') }}">
+            <h2  class="metric_title">Global metrics</h2>
+            <table style="width:100%" id="metrics">
+                <tr>
+                  <th>Total Deadlifts</th>
+                  <th>Grip Accuracy</th>
+                  <th>Stance Accuracy</th>
+                  <th>Total Air Squats</th>
+                </tr>
+                <tr>
+                  <td>{{ countdf }}</td>
+                  <td>{{ grip }}%</td>
+                  <td>{{ stance }}%</td>
+                  <td>{{ countas }}</td>
+                </tr>
+              </table>
         </div>
         <div class="column_right">
             <h2>Movements</h2>
             <div class="content">
-                <img src="/static/images/deadlift_button_sel.jpg" width="230px">
+                <a href="{{url_for('index')}}">
+                    <img class="bt1" src="/static/images/deadlift_button.jpg" width="230px">
+                   </a>
                 <br>
                 <br>
                 <a href="{{url_for('indexsq')}}">
