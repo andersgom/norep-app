@@ -67,4 +67,4 @@ Because the data is composed by coordinate points, I used a `K-Nearest Neighbors
 
 ### **Preview**
 
-![Preview](static\videos\NoRep-App-Demo-gif.gif)
+![Preview](https://raw.githubusercontent.com/andersgom/norep-app/main/static/videos/NoRep-App-Demo-gif.gif?token=GHSAT0AAAAAABYIZV6M77YXEOAVUY2UTW36YYQSXCQ)
