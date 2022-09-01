@@ -7,7 +7,7 @@ norepvenv
 classmodel.ipynb
 Pose_classification_(basic).ipynb
 testing-notebook.ipynb
-static\videos\mov-deadlift.mp4
-static\videos\mov-squats.mp4
-static\videos\NoRep-App-Demo-lightweight.mp4
-static\videos\NoRep-App-Demo.mp4
+mov-deadlift.mp4
+mov-squats.mp4
+NoRep-App-Demo-lightweight.mp4
+NoRep-App-Demo.mp4
