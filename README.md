@@ -6,9 +6,9 @@
 
 ### **The idea**
 
-After training via Zoom for months, I noticed that fitness coaches had a limited visilibity through the webcam (especially during group classes).
+After training via Zoom for months, I noticed that fitness coaches had limited visibility through the webcam (especially during group classes). This app is meant to be a tool for fitness professionals that, during online classes, will allow them to spot bad practices in real time and improve the performance of their coachees.
 
-This app is meant to be a tool for fitness professionals that, during online classes, that will allow them to spot bad practices in real time and improve the performance of their coachees.
+This project is powered by the amazing technology of [Mediapipe](https://mediapipe.dev/).
 
 Check the presentation [here](####).
 
@@ -45,14 +45,13 @@ Check the presentation [here](####).
 
 ### **Data gathering**
 
-The data was taken from videos of my own workouts, assisted by a certified Crossfit coach, and online videos to train the model with more diverse body shapes and environments. To identify each position I made manual labelling.
-The output dataset is composed by coordinates of 33 points, being each one of them a different body part.
+The data was taken from videos of my own workouts, assisted by a certified Crossfit coach, and online videos to train the model with more diverse body shapes and environments. To identify each position, I made manual labelling. The output dataset is composed of the coordinates of 33 points, each one of them a different body part.
 
 <br>
 
 ### **The model**
 
-Because the data is composed by coordinate points, I used a `K-Nearest Neighbors (KNN)` algorithm  for the model, tuning the hyperparamenters to give more priority to the points that are closer to each other. To improve the model, I did signal boosting on the model by reaching out fitness professionals.
+Because the data is composed of coordinate points, I used a `K-Nearest Neighbors (KNN)` algorithm for the model, tuning the hyperparameters to give more priority to the points that are closest to each other. To improve the model, I did signal boosting on the model by reaching out to fitness professionals.
 
 <br>
 
@@ -68,3 +67,11 @@ Because the data is composed by coordinate points, I used a `K-Nearest Neighbors
 ### **Preview**
 
 ![Preview](https://raw.githubusercontent.com/andersgom/norep-app/main/static/videos/NoRep-App-Demo-gif.gif?token=GHSAT0AAAAAABYIZV6M77YXEOAVUY2UTW36YYQSXCQ)
+
+<br>
+
+### **Acknowledgments**
+
+This project was developed during my time at the Ironhack Data Analytics Bootcamp in Lisbon during the summer of '22. I would like to thank Ironhack Lisbon for the opportunity, José and Gladys for being the best teacher and teacher assistant I could ask for, for their patience and huge commitment, my Data class for being a group of amazing people and exceptional professionals, and for the bitoques we enjoyed each Friday.
+
+Last but not least, thanks to The Bakery Crossfit for the support and for giving me the inspiration for this project, especially to Edu and Sara for sharing your knowledge and advice with me. In your own way, each one of you has helped me to grow as a person in many different ways, challenged me to improve, and inspired me to become a better person. ***THANK YOU***. 💙
