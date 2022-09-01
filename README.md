@@ -10,6 +10,8 @@ After training via Zoom for months, I noticed that fitness coaches had a limited
 
 This app is meant to be a tool for fitness professionals that, during online classes, that will allow them to spot bad practices in real time and improve the performance of their coachees.
 
+Check the presentation [here](####).
+
 <br>
 
 ### **Features**
