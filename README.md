@@ -10,7 +10,7 @@ After training via Zoom for months, I noticed that fitness coaches had limited v
 
 This project is powered by the amazing technology of [Mediapipe](https://mediapipe.dev/).
 
-Check the presentation [here](####).
+Check the presentation [here](https://www.canva.com/design/DAFK_LJqxA4/uFmDz_rNq8PuCC3Y5FaNMw/view?utm_content=DAFK_LJqxA4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
 
 <br>
 
@@ -22,7 +22,7 @@ Check the presentation [here](####).
 
 <br>
 
-- **No body, No Reps**:
+- **Time-out!**:
     - The recognition model only initializes when there are people in front of the camera, to prevent false repetitions to appear.
 
 <br>
