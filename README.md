@@ -72,6 +72,6 @@ Because the data is composed of coordinate points, I used a `K-Nearest Neighbors
 
 ### **Acknowledgments**
 
-This project was developed during my time at the Ironhack Data Analytics Bootcamp in Lisbon during the summer of '22. I would like to thank Ironhack Lisbon for the opportunity, José and Gladys for being the best teacher and teacher assistant I could ask for, for their patience and huge commitment, my Data class for being a group of amazing people and exceptional professionals, and for the bitoques we enjoyed each Friday.
+This project was developed during my time at the Ironhack Data Analytics Bootcamp in Lisbon during the summer of '22. I would like to thank Ironhack Lisbon for the opportunity, José and Gladys for being the best teacher and teacher assistant I could ask for, for their patience and huge commitment, and my Data class for being a group of amazing people and exceptional professionals, and for the bitoques we enjoyed each Friday.
 
 Last but not least, thanks to The Bakery Crossfit for the support and for giving me the inspiration for this project, especially to Edu and Sara for sharing your knowledge and advice with me. In your own way, each one of you has helped me to grow as a person in many different ways, challenged me to improve, and inspired me to become a better person. ***THANK YOU***. 💙
