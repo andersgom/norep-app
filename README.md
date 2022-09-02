@@ -28,7 +28,7 @@ Check the presentation [here](https://www.canva.com/design/DAFK_LJqxA4/uFmDz_rNq
 <br>
 
 - **Metrics report**:
-    - Once your're finished your workout, you'll find a report with your repetitions in each movement and the accuracy of your posture.
+    - Once your workout is done, you'll find a report with your repetitions in each movement and the accuracy of your posture.
 
 <br>
 
